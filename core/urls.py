@@ -16,6 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from data_explorer.views import collecions_view, update
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", collecions_view, name="collecions-view"),
+    path("update/", update, name="collections-update"),
 ]
