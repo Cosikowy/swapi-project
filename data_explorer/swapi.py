@@ -1,4 +1,5 @@
 import os
+from enum import StrEnum
 from logging import getLogger
 
 import requests
@@ -6,25 +7,31 @@ import requests
 logger = getLogger(__name__)
 
 
+class WrongAPIError(Exception):
+    ...
+
+
+class ENDPOINTS(StrEnum):
+    people = "people/"
+    planets = "planets/"
+
+
 class SWAPI:
     def __init__(self, api_url=""):
         self.api_url: str = self._resolve_api_url(api_url)
-        self._health_check()
+        self.health_check()
 
     def _resolve_api_url(self, api_url) -> str:
         url = api_url or os.getenv("SWAPI_API_URL", None)
         if url is None:
-            raise ValueError(
+            raise WrongAPIError(
                 "API url not provided nor env variable 'SWAPI_API_URL' not set"
             )
         if not url.endswith(r"/") and not url.startswith((r"https://", r"http://")):
-            raise ValueError("API url is not correctly formatted")
+            raise WrongAPIError("API url is not correctly formatted")
         return url
 
-    def update_data(self):
-        ...
-
-    def _health_check(self) -> None:
+    def health_check(self) -> None:
         response = requests.get(self.api_url)
         if response.status_code != 200:
             logger.warning(
@@ -37,20 +44,19 @@ class SWAPI:
         result: list = []
         _next: bool = True
         url: str = self.api_url + endpoint
+        response = requests.get(url)
         while _next:
-            response = requests.get(url).json()
-            result.extend(response["results"])
-            if (next_url := response.get("next")) is not None:
+            response_body = response.json()
+            result.extend(response_body["results"])
+            if (next_url := response_body.get("next")) is not None:
                 url = next_url
+                response = requests.get(url)
             else:
                 _next = False
-        return result
+        return result, response.headers.get("etag")
 
-    def _get_people(self) -> list:
-        return self._get_data("people/")
+    def get_people(self) -> tuple:
+        return self._get_data(ENDPOINTS.people)
 
-    def _get_planets(self):
-        return self._get_data("planets/")
-
-    def resolve_planets(self):
-        ...
+    def get_planets(self) -> tuple:
+        return self._get_data(ENDPOINTS.planets)
