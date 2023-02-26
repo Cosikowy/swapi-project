@@ -16,10 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from data_explorer.views import collecions_view, update
+from data_explorer.views import (
+    collecion_view,
+    historical_data,
+    occurrence_count,
+    update,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", collecions_view, name="collecions-view"),
+    path("collection/", collecion_view, name="collecion-view"),
+    path("", historical_data, name="collecions-view"),
+    path("occurrence-counter/<str:id>/", occurrence_count, name="fields-count-view"),
     path("update/", update, name="collections-update"),
 ]

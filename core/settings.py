@@ -82,7 +82,11 @@ DATABASES = {
         "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
         "USER": os.environ.get("POSTGRES_USER"),
         "HOST": "db",
-        "PORT": 5432,
+        # "NAME": "swapi",
+        # "USER": "postgres",
+        # "PASSWORD": "some_very_secret_password",
+        # "HOST": "localhost",
+        # "PORT": 5432,
     }
 }
 

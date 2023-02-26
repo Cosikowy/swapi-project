@@ -80,6 +80,7 @@ class DataHandler:
     def _retrive_metadata(self, filename):
         return Collection.objects.get(filename=filename)
 
-    def count_values(self, table, columns):
+    @staticmethod
+    def count_values(table, columns):
         df = etl.valuecounts(table, *columns)
         return etl.cutout(df, "frequency")

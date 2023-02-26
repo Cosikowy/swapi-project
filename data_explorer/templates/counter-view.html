@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+{% if file_name %}
+<div class="alert alert-primary" role="alert">
+    {{ file_name}}
+</div>
+{% endif %}
+<form method="GET" action={{ picked_fields_url }}>
+    {{ form.as_table }}
+    <input type="submit" value="Pick fields">
+</form>
+
+{% if columns %}
+<table class="table">
+    <thead>
+        <tr>
+            {% for col_name in columns %}
+            <th scope="col">{{ col_name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in values %}
+        <tr>
+            {% for value in row %}
+            <th scope="row">{{ value }}</th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href={{ load_more }}>
+    <button type="button" class="btn btn-primary">Load more</button>
+</a>
+{% endif %}
+{% endblock %}

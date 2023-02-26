@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+
+{% block content %}
+{% if file_name %}
+<div class="alert alert-primary" role="alert">
+    {{ file_name }}
+</div>
+<div class="nav-item active">
+    <a class="nav-link" href={{ value_counter_url }}>Value counter</a>
+</div>
+{% endif %}
+<table class="table">
+    <thead>
+        <tr>
+            {% for col_name in columns %}
+            <th scope="col">{{ col_name }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in values %}
+        <tr>
+            {% for value in row %}
+            <th scope="row">{{ value }}</th>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href={{ load_more }}>
+    <button type="button" class="btn btn-primary">Load more</button>
+</a>
+{% endblock %}
