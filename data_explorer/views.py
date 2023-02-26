@@ -1,8 +1,8 @@
 import petl as etl
-from django import forms
 from django.shortcuts import redirect, render
 
 from data_explorer.data_tools import DataHandler
+from data_explorer.forms import PickerFields
 from data_explorer.models import Collection
 from data_explorer.swapi import SWAPI
 
@@ -53,24 +53,7 @@ def historical_data(request, entries_count=10, *args, **kwargs):
     return render(request, "collections-view.html", context=context)
 
 
-choices = (
-    ("name", "name"),
-    ("height", "height"),
-    ("mass", "mass"),
-    ("hair_color", "hair_color"),
-    ("skin_color", "skin_color"),
-    ("eye_color", "eye_color"),
-    ("birth_year", "birth_year"),
-    ("gender", "gender"),
-    ("date", "date"),
-    ("homeworld", "homeworld"),
-)
-
-
 def occurrence_count(request, id, entries_count=10, *args, **kwargs):
-    class PickerFields(forms.Form):
-        picked_fields = forms.MultipleChoiceField(choices=choices)
-
     _id = id
     picked_fields = request.GET.getlist("picked_fields", [])
     entries_count = int(request.GET.get("entries_count", 10))
