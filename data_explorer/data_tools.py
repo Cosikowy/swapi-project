@@ -16,7 +16,9 @@ class DataHandler:
         self.full_path = os.path.join(self.file_location, self.file_name)
 
     def load_data(self, full_path):
-        return etl.fromcsv(full_path)
+        df = etl.fromcsv(full_path)
+        df = etl.convertnumbers(df)
+        return df
 
     def save_people_data(self, data, planets, version_tag):
         data = self.parse_people_data(data, planets)
