@@ -2,7 +2,7 @@ import petl as etl
 from django.shortcuts import redirect, render
 
 from data_explorer.data_tools import DataHandler
-from data_explorer.forms import PickerFields
+from data_explorer.forms import PickerFields, SortForm
 from data_explorer.models import Collection
 from data_explorer.swapi import SWAPI
 
@@ -24,18 +24,25 @@ def update(request, *args, **kwargs):
 def collecion_view(request, id, sort_by=None, *args, **kwargs):
     _id = id
     entries_count = int(request.GET.get("entries_count", 10))
+    sort_by = request.GET.get("sort_by", None)
     collection_info = Collection.objects.get(id=_id)
-
     people = DataHandler("people").load_data(collection_info.full_path)
+    load_more_url = f"?entries_count={entries_count +10}"
+    if sort_by:
+        load_more_url += f"&sort_by={sort_by}"
+        asc = True if sort_by.startswith("-") else False
+        sort_by = sort_by.strip("-")
+        people = etl.sort(people, sort_by, asc)
 
     people = etl.head(people, entries_count)
     context = {
-        "load_more": f"?id={collection_info.id}&entries_count={entries_count +10}",
+        "load_more": load_more_url,
         "file_name": collection_info.file_name,
         "columns": etl.columns(people),
         "values": etl.toarray(people),
         "entries_count": entries_count,
-        "value_counter_url": f"/occurrence-counter/?id={_id}",
+        "value_counter_url": f"/occurrence-counter/{_id}",
+        "sort_form": SortForm(),
     }
     return render(request, "table-view.html", context=context)
 

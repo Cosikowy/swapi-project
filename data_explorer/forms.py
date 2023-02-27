@@ -16,3 +16,13 @@ choices = (
 
 class PickerFields(forms.Form):
     picked_fields = forms.MultipleChoiceField(choices=choices)
+
+
+sort_choices = []
+for field in choices:
+    sort_choices.append(field)
+    sort_choices.append((f"-{field[0]}", f"-{field[0]}"))
+
+
+class SortForm(forms.Form):
+    sort_by = forms.ChoiceField(choices=sort_choices)

@@ -11,6 +11,11 @@
     <a class="nav-link" href={{ value_counter_url }}>Value counter</a>
 </div>
 {% endif %}
+
+<form method="GET">
+    {{ sort_form.as_table }}
+    <input type="submit" value="sort">
+</form>
 <table class="table">
     <thead>
         <tr>
