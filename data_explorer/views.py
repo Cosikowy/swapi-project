@@ -30,9 +30,9 @@ def collecion_view(request, id, sort_by=None, *args, **kwargs):
     load_more_url = f"?entries_count={entries_count +10}"
     if sort_by:
         load_more_url += f"&sort_by={sort_by}"
-        asc = True if sort_by.startswith("-") else False
+        reverse = False if sort_by.startswith("-") else True
         sort_by = sort_by.strip("-")
-        people = etl.sort(people, sort_by, asc)
+        people = etl.sort(people, sort_by, reverse)
 
     people = etl.head(people, entries_count)
     context = {
