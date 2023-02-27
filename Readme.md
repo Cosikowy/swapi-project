@@ -3,7 +3,9 @@
 
 Small project to explore people of Star Wars universum.
 
-Starting is as easy as using one command:
+First generate `.env` file based on `.env_example`
+
+Then start application with:
 
 `docker-compose up`
 
