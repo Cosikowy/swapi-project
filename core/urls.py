@@ -25,7 +25,7 @@ from data_explorer.views import (
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("collection/", collecion_view, name="collecion-view"),
+    path("collection/<str:id>", collecion_view, name="collecion-view"),
     path("", historical_data, name="collecions-view"),
     path("occurrence-counter/<str:id>/", occurrence_count, name="fields-count-view"),
     path("update/", update, name="collections-update"),

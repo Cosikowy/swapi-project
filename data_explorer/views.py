@@ -21,8 +21,8 @@ def update(request, *args, **kwargs):
     return redirect("collecions-view")
 
 
-def collecion_view(request, sort_by=None, *args, **kwargs):
-    _id = request.GET.get("id")
+def collecion_view(request, id, sort_by=None, *args, **kwargs):
+    _id = id
     entries_count = int(request.GET.get("entries_count", 10))
     collection_info = Collection.objects.get(id=_id)
 
@@ -77,10 +77,10 @@ def occurrence_count(request, id, entries_count=10, *args, **kwargs):
         ["&picked_fields={}".format(field) for field in picked_fields]
     )
 
-    self_url = f"?id={collection_info.id}{picked_fields}"
+    self_url = f"?{picked_fields}"
 
     context = {
-        "load_more": self_url + f"&entries_count={entries_count +10}",
+        "load_more": self_url + f"&entries_count={entries_count+10}",
         "picked_fields_url": self_url,
         "picked_fields": picked_fields,
         "fields": columns,
