@@ -10,9 +10,11 @@ sw = SWAPI("https://swapi.dev/api/")
 
 
 def update(request, *args, **kwargs):
+    print("Updating data...")
     planets_handler = DataHandler("planets")
     planets, planets_version = sw.get_planets()
     planets_data = planets_handler.save_planets_data(planets, planets_version)
+    print("Updating people...")
 
     people_handler = DataHandler("people")
     people, people_version = sw.get_people()
@@ -48,13 +50,17 @@ def collecion_view(request, id, sort_by=None, *args, **kwargs):
 
 
 def historical_data(request, entries_count=10, *args, **kwargs):
+    values = []
     collections = Collection.objects.all().order_by("-timestamp").values()
-    df = etl.fromdicts(collections)
+    if len(collections):
+        df = etl.fromdicts(collections)
+        values = etl.toarray(df)
+
     context = {
         "load_more": f"?entries_count={entries_count +10}",
         "file_name": None,
         "columns": ["timestamp", "file_name"],
-        "values": etl.toarray(df),
+        "values": values,
         "entries_count": entries_count,
     }
     return render(request, "collections-view.html", context=context)
